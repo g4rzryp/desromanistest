@@ -200,8 +200,7 @@ function startVocab(chs) {
     showView('vocab-view');
     isVocabActive = true;
     
-    // Check if user selected all 8 chapters combined
-    isAllChaptersMode = (chs.length === 8);
+    isAllChaptersMode = (chs.length === 12);
     
     pool = chs.flatMap(c => vocabData[c]).sort(() => Math.random() - 0.5);
     vIdx = 0; 
@@ -214,7 +213,6 @@ function startVocab(chs) {
 function nextWord() {
     if(vIdx >= pool.length) {
         if(isAllChaptersMode) {
-            // Infinite reset loop: Reshuffle items, reset question index, keep your current streak running
             pool = pool.sort(() => Math.random() - 0.5);
             vIdx = 0;
         } else {
