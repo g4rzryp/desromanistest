@@ -84,7 +84,7 @@
 <div class="main">
     <div id="home-view" class="container active">
         <h1 style="font-size: 2.5rem; margin-bottom: 10px;"> 🏛️</h1>
-        <p style="color: #9ca3af; margin-bottom: 30px;">v2.2.1</p>
+        <p style="color: #9ca3af; margin-bottom: 30px;">v2.2.2</p>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
             <div id="streak-box" style="background: rgba(59, 130, 246, 0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--err); transition: border-color 0.3s;">
@@ -174,14 +174,12 @@ const grammar = {
     'passive': { t:"Passive", h:["Perf","Plup"], r:["1st Sing","2nd Sing","3rd Sing","1st Plu","2nd Plu","3rd Plu"], k:[["ppp sum","ppp eram"],["ppp es","ppp eras"],["ppp est","ppp erat"],["ppp sumus","ppp eramus"],["ppp estis","ppp eratis"],["ppp sunt","ppp erant"]]},
 };
 
-let pool = [], vIdx = 0, streak = 0, timer = null, lock = false, slot = 1, isVocabActive = false, activeG = '';
+let pool = [], vIdx = 0, streak = 0, timer = null, lock = false, isVocabActive = false, activeG = '';
 let isAllChaptersMode = false;
 let secureBestTracker = parseInt(localStorage.getItem('vb_best')) || 0;
 
 function toggleTimerPref() { localStorage.setItem('sd_timer', document.getElementById('timer-toggle').checked); }
 function toggleTimerHardPref() { localStorage.setItem('sd_timer_hard', document.getElementById('timer-toggle-hard').checked); }
-
-function useSlot(num) { slot = num; }
 
 function checkCheatStatus() {
     const currentStorageBest = parseInt(localStorage.getItem('vb_best')) || 0;
@@ -416,7 +414,7 @@ function goHome() {
     }
 }
 
-window.onload = () => { goHome(); useSlot(1); };
+document.addEventListener('DOMContentLoaded', goHome);
 </script>
 </body>
 </html>
