@@ -84,7 +84,7 @@
 <div class="main">
     <div id="home-view" class="container active">
         <h1 style="font-size: 2.5rem; margin-bottom: 10px;"> 🏛️</h1>
-        <p style="color: #9ca3af; margin-bottom: 30px;">v2.2.2</p>
+        <p style="color: #9ca3af; margin-bottom: 30px;">v2.3.1</p>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
             <div id="streak-box" style="background: rgba(59, 130, 246, 0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--err); transition: border-color 0.3s;">
@@ -174,9 +174,28 @@ const grammar = {
     'passive': { t:"Passive", h:["Perf","Plup"], r:["1st Sing","2nd Sing","3rd Sing","1st Plu","2nd Plu","3rd Plu"], k:[["ppp sum","ppp eram"],["ppp es","ppp eras"],["ppp est","ppp erat"],["ppp sumus","ppp eramus"],["ppp estis","ppp eratis"],["ppp sunt","ppp erant"]]},
 };
 
+const SECRET = 7391; // A random number users won't guess
+
+function getVerifiedScore() {
+    const rawScore = parseInt(localStorage.getItem('vb_best')) || 0;
+    const hash = parseInt(localStorage.getItem('vb_hash')) || 0;
+    
+    // If the score is 0, it's fine
+    if (rawScore === 0) return 0;
+    
+    // If the math doesn't match, they edited vb_best without knowing the secret formula
+    if (hash !== (rawScore * 5) + SECRET) {
+        alert("Nice try! Save file corruption/tampering detected. Score reset to 0.");
+        localStorage.setItem('vb_best', 0);
+        localStorage.setItem('vb_hash', 0);
+        return 0;
+    }
+    return rawScore;
+}
+    
 let pool = [], vIdx = 0, streak = 0, timer = null, lock = false, isVocabActive = false, activeG = '';
 let isAllChaptersMode = false;
-let secureBestTracker = parseInt(localStorage.getItem('vb_best')) || 0;
+let secureBestTracker = getVerifiedScore();
 
 function toggleTimerPref() { localStorage.setItem('sd_timer', document.getElementById('timer-toggle').checked); }
 function toggleTimerHardPref() { localStorage.setItem('sd_timer_hard', document.getElementById('timer-toggle-hard').checked); }
@@ -299,6 +318,8 @@ document.getElementById('vocab-input').onkeydown = (e) => {
             if(streak > currentStorageBest) {
                 if (streak === currentStorageBest + 1) {
                     localStorage.setItem('vb_best', streak);
+                    // Save the secret signature alongside the score
+                    localStorage.setItem('vb_hash', (streak * 5) + SECRET);
                     secureBestTracker = streak;
                 } else {
                     localStorage.setItem('vb_best', 0);
